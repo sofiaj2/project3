@@ -12,13 +12,13 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" prefHeight="718.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.studentinterfacegui.HelloController">
@@ -149,8 +149,7 @@
                        <menus>
                          <Menu mnemonicParsing="false" text="Roster">
                            <items>
-                             <MenuItem mnemonicParsing="false"
-                                       text="School/College" />
+                             <MenuItem mnemonicParsing="false" text="School/College" />
                            </items>
                          </Menu>
                          <Menu mnemonicParsing="false" text="Enrollment">
@@ -170,10 +169,12 @@
          </Tab>
      </tabs>
    </TabPane>
-   <StackPane prefHeight="150.0" prefWidth="200.0" />
    <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
      <items>
-       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+            <children>
+               <TextArea prefHeight="199.0" prefWidth="657.0" />
+            </children></AnchorPane>
      </items>
    </SplitPane>
 </VBox>
