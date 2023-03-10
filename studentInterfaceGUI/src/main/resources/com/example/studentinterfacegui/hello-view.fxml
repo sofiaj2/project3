@@ -115,6 +115,7 @@
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                        <children>
                            <TextField prefHeight="26.0" prefWidth="384.0" GridPane.columnIndex="1" />
@@ -131,6 +132,7 @@
                                  <Button mnemonicParsing="false" text="Drop" />
                               </children>
                            </HBox>
+                           <Button mnemonicParsing="false" text="Semester End" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                        </children>
                    </GridPane>
                </children></AnchorPane>
@@ -156,16 +158,14 @@
                          <TextField prefHeight="26.0" prefWidth="384.0" GridPane.columnIndex="1" />
                          <TextField prefHeight="26.0" prefWidth="417.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                          <Label fx:id="welcomeText" prefHeight="33.0" prefWidth="86.0" text="First Name" />
-                         <Label text="Last Name"
-                                GridPane.rowIndex="1" />
+                         <Label text="Last Name" GridPane.rowIndex="1" />
                          <Label prefHeight="17.0" prefWidth="72.0" text="Date of Birth" GridPane.rowIndex="2" />
-                         <Label prefHeight="17.0" prefWidth="116.0" text="Credits " GridPane.rowIndex="3" />
+                         <Label prefHeight="17.0" prefWidth="116.0" text="Amount" GridPane.rowIndex="3" />
                          <DatePicker prefHeight="26.0" prefWidth="405.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                          <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
                          <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                              <children>
-                                 <Button mnemonicParsing="false" text="Enroll" />
-                                 <Button mnemonicParsing="false" text="Drop" />
+                                 <Button mnemonicParsing="false" text="Update Scholarship Amount" />
                              </children>
                          </HBox>
                      </children>
