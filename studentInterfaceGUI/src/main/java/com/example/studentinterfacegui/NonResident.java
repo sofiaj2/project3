@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * NonResident class that is an extension of student.

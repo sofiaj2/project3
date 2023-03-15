@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 /**
  * Profile class that holds information about name and date of birth
  * Has methods to compare Profile objects such as compareTo() and equals()

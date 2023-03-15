@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * Class that handles Resident objects with methods such as tuitionDue to

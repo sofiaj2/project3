@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -23,16 +23,31 @@ public class Date implements Comparable<Date> {
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
         this.year = calendar.get(Calendar.YEAR);
     }
+
+
     /**
      * From string input, creates Date object using StringTokenizer
      * @param date String in format MONTH/DAY/YEAR
      */
-    public Date(String date) {
+    /*
+    public Date(String date) { //take “mm/dd/yyyy” and create a Date object
         StringTokenizer token = new StringTokenizer(date, "/");
         month = Integer.parseInt(token.nextToken());
         day = Integer.parseInt(token.nextToken());
         year = Integer.parseInt(token.nextToken());
-    } //take “mm/dd/yyyy” and create a Date object
+    }
+    */
+
+    /**
+     * From string input, creates Date object using StringTokenizer
+     * @param date String in format YEAR/MONTH/DAY
+     */
+    public Date(String date) { //take “yyyy/mm/dd” and create a Date object
+        StringTokenizer token = new StringTokenizer(date, "-");
+        year = Integer.parseInt(token.nextToken());
+        month = Integer.parseInt(token.nextToken());
+        day = Integer.parseInt(token.nextToken());
+    }
 
     /**
      * Determines the validity of a date.

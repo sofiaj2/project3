@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * Enrollment class that handles EnrollStudent objects

@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * EnrollStudent class that represents enrolled students.

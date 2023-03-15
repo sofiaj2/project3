@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * Enum class for Major that declares all possible Majors for Students

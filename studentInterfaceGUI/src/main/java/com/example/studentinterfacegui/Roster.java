@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 import java.util.Calendar;
 
 /**
@@ -102,7 +102,7 @@ public class Roster {
         int youngestYear = today.getYear() - minimumAge;
         int todayMonth = today.getMonth();
         int todayDay = today.getDay();
-        Date youngestDob = new Date(todayMonth + "/" + todayDay + "/" + youngestYear);
+        Date youngestDob = new Date(youngestYear + "-" + todayMonth + "-" + todayDay);
         if (studentDob.compareTo(youngestDob) == 1) {
             return false;
         }

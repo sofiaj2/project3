@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
