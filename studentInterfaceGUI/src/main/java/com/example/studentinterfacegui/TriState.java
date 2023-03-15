@@ -1,4 +1,4 @@
-package src;
+package com.example.studentinterfacegui;
 
 /**
  * TriState class that is an extension of NonResident. NonResident class
