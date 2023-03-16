@@ -12,17 +12,30 @@ public class TuitionManagerController {
     private Enrollment enrollRoster = new Enrollment();
 
     @FXML
-    private void addRoster(ActionEvent event){
+    private Major checkMajor(ActionEvent event) {
         Major major;
-        if (RosterBAITButton.isSelected()){major = Major.BAIT;}
-        else if (RosterITIButton.isSelected()) {major = Major.ITI;}
-        else if (RosterCSButton.isSelected()) {major = Major.CS;}
-        else if (RosterECEButton.isSelected()) {major = Major.EE;}
-        else if (RosterMATHButton.isSelected()){major = Major.MATH;}
-        else {
+        if (RosterBAITButton.isSelected()) {
+            major = Major.BAIT;
+        } else if (RosterITIButton.isSelected()) {
+            major = Major.ITI;
+        } else if (RosterCSButton.isSelected()) {
+            major = Major.CS;
+        } else if (RosterECEButton.isSelected()) {
+            major = Major.EE;
+        } else if (RosterMATHButton.isSelected()) {
+            major = Major.MATH;
+        } else {
             major = null;
             textArea.appendText("Missing data\n");
+            return null;
         }
+        return major;
+    }
+
+    @FXML
+    private void addRoster(ActionEvent event) {
+        Major major;
+        major = checkMajor(event);
         if (isValidInputAdd(event) && major != null) {
             String firstName = rosterFirstName.getText();
             String lastName = rosterLastName.getText();
@@ -31,24 +44,28 @@ public class TuitionManagerController {
             Date dob = new Date(date);
             Profile profile = new Profile(firstName, lastName, dob);
             Student student = null;
-            if (RosterResidentButton.isSelected()){ student = new Resident(profile, major, credits); }
-            else if (RosterNonResidentButton.isSelected()){
+            if (RosterResidentButton.isSelected()) {
+                student = new Resident(profile, major, credits);
+            } else if (RosterNonResidentButton.isSelected()) {
                 if (RosterTriStateButton.isSelected()) {
                     if (RosterCTButton.isSelected())
                         student = new TriState(profile, major, credits, "CT");
                     else if (RosterNYButton.isSelected())
                         student = new TriState(profile, major, credits, "NY");
-                    else {textArea.appendText("Missing data\n");} //error message
-                }
-                else if (RosterInternationalButton.isSelected()) {
+                    else {
+                        textArea.appendText("Missing data\n");
+                    } //error message
+                } else if (RosterInternationalButton.isSelected()) {
                     if (RosterStudyAbroadButton.isSelected())
                         student = new International(profile, major, credits, true);
                     else
                         student = new International(profile, major, credits, false);
+                } else {
+                    textArea.appendText("Missing data\n");
                 }
-                else {textArea.appendText("Missing data\n");}
+            } else {
+                textArea.appendText("Missing data\n");
             }
-            else {textArea.appendText("Missing data\n");}
             if (student != null)
                 addStudentToRoster(student, rutgersRoster, firstName, lastName, date, dob);
         }
@@ -67,20 +84,40 @@ public class TuitionManagerController {
             textArea.appendText("Missing data\n");
             return false;
         }
+        //String date = RosterDatePicker.getValue().toString();
 
-        try {String date = RosterDatePicker.getValue().toString();}//("yyyy-mm-dd"));
-        catch (Exception e) {
+        try {
+            String date = RosterDatePicker.getValue().toString();
+        }//("yyyy-mm-dd"));
+        catch (NullPointerException e) {
             textArea.appendText("Missing data\n");
             return false;
         }
 
         return true;
+    }
 
+    private boolean isValidInputNamesandDate(ActionEvent event) {
+        String firstName = rosterFirstName.getText();
+        String lastName = rosterLastName.getText();
+        if (firstName.equals("") || lastName.equals("")) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+
+        try {
+            String date = RosterDatePicker.getValue().toString();
+        }//("yyyy-mm-dd"));
+        catch (NullPointerException e) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        return true;
     }
 
     private void addStudentToRoster(Student student, Roster rutgersRoster,
-                           String firstName, String lastName,
-                           String dateOfBirth, Date studentDate){
+                                    String firstName, String lastName,
+                                    String dateOfBirth, Date studentDate) {
         if (student != null) {
             if (rutgersRoster.contains(student)) {
                 textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
@@ -88,7 +125,7 @@ public class TuitionManagerController {
             } else {
                 if (rutgersRoster.add(student)) {
                     textArea.appendText(firstName + " " + lastName + " " +
-                           dateOfBirth + " added to the roster.\n");
+                            dateOfBirth + " added to the roster.\n");
                 } else {
                     textArea.appendText("DOB invalid: " + studentDate +
                             " younger than 16 years old.\n");
@@ -97,29 +134,60 @@ public class TuitionManagerController {
         }
     }
 
-    private boolean isValidCredits(String creditsCompleted) {
-        if (creditsCompleted.equals(""))
-            return false;
-        try {
-            if (Integer.parseInt(creditsCompleted) < 0) {
-                //System.out.println("Credits completed invalid: cannot be negative!");
-                return false;
-            }
-        } catch (NumberFormatException nfe) {
-            //System.out.println("Credits completed invalid: not an integer!");
-            return false;
-        }
-        return true;
-    }
     @FXML
-    private void removeRoster(ActionEvent event){
+    private void removeRoster(ActionEvent event) {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
         String date = RosterDatePicker.getValue().toString();
         Date dateOfBirth = new Date(date);
-        Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
-        for (int i = 0; i < rutgersRoster.getSize(); i++){
-            //if (rutgersRoster[i].)
+        if (isValidInputNamesandDate(event)) {
+            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            if (!rutgersRoster.contains(studentProfile)) {
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                        + " is not in the roster.\n");
+            } else {
+                rutgersRoster.remove(studentProfile);
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                        + " removed from the roster.\n");
+            }
+        }
+    }
+
+    @FXML
+    private String printMajor(Major major) {
+        if (major.equals(major.BAIT)) {
+            return "BAIT";
+        } else if (major.equals(major.ITI)) {
+            return "ITI";
+        } else if (major.equals(major.MATH)) {
+            return "MATH";
+        } else if (major.equals(major.CS)) {
+            return "CS";
+        } else if (major.equals(major.EE)) {
+            return "EE";
+        }
+        else {return null;}
+    }
+
+
+    @FXML
+    private void changeMajor(ActionEvent event){
+        String firstName = rosterFirstName.getText();
+        String lastName = rosterLastName.getText();
+        String date = RosterDatePicker.getValue().toString();
+        Date dateOfBirth = new Date(date);
+        Major major = checkMajor(event);
+        if (isValidInputNamesandDate(event) && major != null) {
+            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            if (!rutgersRoster.contains(studentProfile)) {
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                        + " is not in the roster.\n");
+            } else {
+                rutgersRoster.findStudent(studentProfile).setMajor(major);
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
+                        " major changed to " +
+                        printMajor(rutgersRoster.findStudent(studentProfile).getMajor()) + "\n");
+            }
         }
     }
 
@@ -170,6 +238,159 @@ public class TuitionManagerController {
             RosterCTButton.setDisable(false);
         }
     }
+
+    @FXML
+    private boolean isValidInputEnroll(ActionEvent event) {
+        String firstName = EnrollFirstNameTextField.getText();
+        String lastName = EnrollLastNameTextField.getText();
+        String creditsCompleted = EnrollCredits.getText();
+        if (firstName.equals("") || lastName.equals("")) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        if (!isValidCredits(creditsCompleted)) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+
+        try {String date = EnrollDatePicker.getValue().toString();}//("yyyy-mm-dd"));
+        catch (NullPointerException e) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        return true;
+    }
+
+    @FXML
+    private boolean isValidInputEnrollNoCredit (ActionEvent event) {
+        String firstName = EnrollFirstNameTextField.getText();
+        String lastName = EnrollLastNameTextField.getText();
+        if (firstName.equals("") || lastName.equals("")) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        try {String date = EnrollDatePicker.getValue().toString();}//("yyyy-mm-dd"));
+        catch (NullPointerException e) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+
+        return true;
+    }
+
+    @FXML
+    private void EnrollStudent(ActionEvent event){
+        String firstName = EnrollFirstNameTextField.getText();
+        String lastName = EnrollLastNameTextField.getText();
+        String date = EnrollDatePicker.getValue().toString();
+        Date dateOfBirth = new Date(date);
+        if (isValidInputEnroll(event)){
+            int credits = Integer.parseInt(RosterCreditsCompleted.getText());
+            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            if (rutgersRoster.contains(studentProfile)){
+                EnrollStudent newStudent = new EnrollStudent(studentProfile, credits);
+                enrollRoster.add(newStudent);
+                textArea.appendText(studentProfile.toString() + " enrolled " + credits
+                        + "credits\n");
+            }
+            else{textArea.appendText("Cannot Enroll: " + studentProfile.toString() +
+                    " is not in the roster.\n");}
+        }
+    }
+
+    @FXML
+    private void dropStudent(ActionEvent event){
+        String firstName = EnrollFirstNameTextField.getText();
+        String lastName = EnrollLastNameTextField.getText();
+        String date = EnrollDatePicker.getValue().toString();
+        Date dateOfBirth = new Date(date);
+        if (isValidInputEnrollNoCredit(event)){
+            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            EnrollStudent newEnrolledStudent = new EnrollStudent(studentProfile);
+            if (!enrollRoster.contains(newEnrolledStudent)){
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
+                        " is not enrolled.\n");
+            }
+            else{enrollRoster.remove(newEnrolledStudent);
+                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
+                        " dropped.\n");}
+        }
+    }
+
+    @FXML
+    private boolean isValidCredits(String creditsCompleted) {
+        if (creditsCompleted.equals(""))
+            return false;
+        try {
+            if (Integer.parseInt(creditsCompleted) < 0) {
+                return false;
+            }
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    @FXML
+    private boolean isValidInputScholarship (ActionEvent event) {
+        String firstName = ScholarshipFirstNameTextField.getText();
+        String lastName = ScholarshipLastNameTextField.getText();
+        int amount = Integer.parseInt(ScholarshipAmount.getText());
+        if (firstName.equals("") || lastName.equals("")) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        try {String date = ScholarshipDatePicker.getValue().toString();}//("yyyy-mm-dd"));
+        catch (NullPointerException e) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+
+        return true;
+    }
+
+    @FXML
+    private void scholarShipUpdateAmount(ActionEvent event){
+        if (isValidInputEnroll(event)){
+            String firstName = ScholarshipFirstNameTextField.getText();
+            String lastName = ScholarshipLastNameTextField.getText();
+            String date = RosterDatePicker.getValue().toString();
+            Date dateOfBirth = new Date(date);
+            int scholarshipAmount = Integer.parseInt(EnrollCredits.getText());
+            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            Student studentToAward = rutgersRoster.findStudent(studentProfile);
+            EnrollStudent studentEnrollFind =
+                    enrollRoster.findStudent(studentProfile);
+            if (rutgersRoster.contains(studentProfile)){
+                if (studentToAward.isResident()) { //check if resident
+                    Resident residentToAward = (Resident) studentToAward;
+                    if (residentToAward.isFullTime(studentEnrollFind.getCreditsEnrolled())) {
+                        residentToAward.setScholarship(scholarshipAmount);
+                        textArea.appendText(studentProfile +
+                                ": scholarship amount updated.\n");
+                    } else { //not full time
+                        textArea.appendText(" part time student is not " +
+                                "eligible for the scholarship.\n");
+                    }
+                } else { //not resident
+                    textArea.appendText(studentProfile + " " + studentToAward.invalidStudent() +
+                            "is not eligible for the scholarship.\n");
+                }
+            } else {textArea.appendText(studentProfile + " is not in the roster.\n");}
+        }
+    }
+
+    @FXML
+    private void printByProfile(ActionEvent event){
+        rutgersRoster.print(textArea);
+    }
+
+    @FXML
+    private void printbySchoolandMajor(ActionEvent event){
+        rutgersRoster.printBySchoolMajor(textArea);
+    }
+
+
 
     @FXML
     private TextField rosterFirstName;

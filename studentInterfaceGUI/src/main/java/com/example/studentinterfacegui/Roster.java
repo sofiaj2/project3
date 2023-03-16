@@ -14,7 +14,7 @@ public class Roster {
     public static final int NOT_FOUND = -1;
 
     /**
-     * Initialization of Roster object
+     * Initiaslization of Roster object
      */
     public Roster() {
         this.size = 4;
@@ -259,7 +259,7 @@ public class Roster {
                 textArea.appendText(student.getProfile().toString() + " " +
                         student.getMajor().toString() + student.toString()
                         + getStanding(student).toString()
-                        + student.getClassification());
+                        + student.getClassification() + "\n");
         }
         textArea.appendText("* end of roster *\n");
     }
@@ -268,8 +268,8 @@ public class Roster {
      * Prints the roster object by sorting by school and then major if same
      * school. Uses compareTo to sort as part of selection sort.
      */
-    public void printBySchoolMajor() { //print roster sorted by school, major
-        System.out.println("** Student roster sorted by school, major **");
+    public void printBySchoolMajor(TextArea TextArea) { //print roster sorted by school, major
+        TextArea.appendText("** Student roster sorted by school, major **\n");
         for (int i = 0; i < this.size - 1; i++)
         {
             int minIndex = i;
@@ -295,19 +295,19 @@ public class Roster {
         for (int k = 0; k < this.size; k++) {
             Student student = this.roster[k];
             if (student != null)
-                System.out.println(student.getProfile().toString() + " " +
+                TextArea.appendText(student.getProfile().toString() + " " +
                         student.getMajor().toString() + student.toString()
                         + getStanding(student).toString()
-                        + student.getClassification());
+                        + student.getClassification() + "\n");
         }
-        System.out.println("* end of roster *");
+        TextArea.appendText("* end of roster *\n");
     }
 
     /**
      * prints roster sorted by standing by using compareTo method
      */
-    public void printByStanding() { //print roster sorted by standing
-        System.out.println("** Student roster sorted by standing **");
+    public void printByStanding(TextArea TextArea) { //print roster sorted by standing
+        TextArea.appendText("** Student roster sorted by standing **\n");
         for (int i = 0; i < this.size - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < this.size; j++) {
@@ -328,12 +328,12 @@ public class Roster {
         for (int k = 0; k < this.size; k++) {
             Student student = this.roster[k];
             if (student != null)
-                System.out.println(student.getProfile().toString() + " " +
+                TextArea.appendText(student.getProfile().toString() + " " +
                         student.getMajor().toString() + student.toString()
                         + getStanding(student).toString()
-                        + student.getClassification());
+                        + student.getClassification() + "\n");
         }
-        System.out.println("* end of roster *");
+        TextArea.appendText("* end of roster *\n");
     }
 
     /**

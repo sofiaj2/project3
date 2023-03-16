@@ -1,5 +1,5 @@
 package com.example.studentinterfacegui;
-
+import javafx.scene.control.TextArea;
 /**
  * Enrollment class that handles EnrollStudent objects
  * Has various methods to handle EnrollStudent objects such as add, grow,
@@ -121,11 +121,11 @@ public class Enrollment {
     /**
      * Prints out the EnrollStudents in the order of the Enrollment array
      */
-    public void print()
+    public void print(TextArea TextArea)
     {
         for (int i = 0; i < this.size; i++){
             if (this.enrollStudents[i] != null)
-                System.out.println(this.enrollStudents[i].getProfile().toString()
+                TextArea.appendText(this.enrollStudents[i].getProfile().toString()
                         + ": " + "credits enrolled: "
                         + this.enrollStudents[i].getCreditsEnrolled());
         }
