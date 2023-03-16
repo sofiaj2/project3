@@ -4,6 +4,10 @@ import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import java.time.format.DateTimeFormatter;
 
 public class TuitionManagerController {
@@ -390,7 +394,99 @@ public class TuitionManagerController {
         rutgersRoster.printBySchoolMajor(textArea);
     }
 
+    @FXML
+    private void loadFromFile(ActionEvent event) {
+        if (fileToLoad.equals(""))
+            textArea.appendText("Missing data.\n");
+        else {
+            Scanner studentList;
+            try {
+                studentList = new Scanner(new File(fileToLoad.getText()));
+            } catch (FileNotFoundException e) {
+                //throw new RuntimeException(e);
+                textArea.appendText("File not found.\n");
+                return;
+            }
+            while (studentList.hasNextLine()) {
+                String dataToken = studentList.nextLine();
+                String[] inputsFromFile = dataToken.split(",");
+                String typeOfStudent = inputsFromFile[0];
+                String firstName = inputsFromFile[1];
+                String lastName = inputsFromFile[2];
+                String dateOfBirth = inputsFromFile[3];
+                Date studentDate = new Date(dateOfBirth, true);
+                String majorSubject = inputsFromFile[4];
+                String creditsEnrolled = inputsFromFile[5];
+                Student studentToAdd;
+                Major studentMajor = returnMajor(majorSubject);
+                if (studentMajor != null && studentDate.isValid() && isValidCredits(creditsEnrolled)) {
+                    Profile studentProfile = new Profile(lastName, firstName, studentDate);
+                    int credits = Integer.parseInt(creditsEnrolled);
+                    studentToAdd = createStudentType(typeOfStudent,
+                            studentProfile, studentMajor, credits, inputsFromFile);
+                    if (studentToAdd != null) {
+                        if (!rutgersRoster.contains(studentToAdd)) {
+                            rutgersRoster.add(studentToAdd);
+                        }
+                    }
+                }
+            }
+            textArea.appendText("Students loaded to the roster.");
+        }
+    }
 
+    private Student createStudentType(String dataToken, Profile studentProfile,
+                                      Major studentMajor, int credits, String[] inputs) {
+        if (dataToken.equals("AR") || dataToken.equals("R")) {
+            return new Resident(studentProfile, studentMajor, credits);
+        } else if (dataToken.equals("AT") || dataToken.equals("T")) {
+            String state;
+            try {
+                state = inputs[6];
+            }
+            catch (ArrayIndexOutOfBoundsException exception) {
+                return null;
+            }
+            if (state.equalsIgnoreCase("CT") || state.equalsIgnoreCase("NY")) {
+                return new TriState(studentProfile, studentMajor, credits,
+                        state);
+            }
+            else {
+                return null;
+            }
+        } else if (dataToken.equals("AI") || dataToken.equals("I")) {
+            boolean studiesAbroad;
+            try {
+                studiesAbroad = Boolean.parseBoolean(inputs[6]);
+            }
+            catch (ArrayIndexOutOfBoundsException exception) {
+                studiesAbroad = false;
+            }
+            return new International(studentProfile,
+                    studentMajor, credits, studiesAbroad);
+        } else if (dataToken.equals("AN") || dataToken.equals("N")) {
+            return new NonResident(studentProfile, studentMajor, credits);
+        } else
+            return null;
+    }
+
+    private Major returnMajor(String majorSubject) {
+        Major studentMajor;
+        if (majorSubject.equalsIgnoreCase("CS")) {
+            studentMajor = Major.CS;
+        } else if (majorSubject.equalsIgnoreCase("ITI")) {
+            studentMajor = Major.ITI;
+        } else if (majorSubject.equalsIgnoreCase("BAIT")) {
+            studentMajor = Major.BAIT;
+        } else if (majorSubject.equalsIgnoreCase("EE")) {
+            studentMajor = Major.EE;
+        } else if (majorSubject.equalsIgnoreCase("MATH")) {
+            studentMajor = Major.MATH;
+        } else {
+            return null;
+        }
+        return studentMajor;
+    }
 
     @FXML
     private TextField rosterFirstName;
@@ -429,7 +525,7 @@ public class TuitionManagerController {
     private RadioButton RosterInternationalButton;
 
     @FXML
-    private Button RosterLoadFromFileButton;
+    private Button LoadFromFileButton;
 
     @FXML
     private RadioButton RosterMATHButton;
@@ -529,4 +625,7 @@ public class TuitionManagerController {
 
     @FXML
     private TextArea textArea;
+
+    @FXML
+    private TextField fileToLoad;
 }

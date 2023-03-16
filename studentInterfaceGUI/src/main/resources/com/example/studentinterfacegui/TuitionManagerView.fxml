@@ -194,7 +194,7 @@
                                     <Menu fx:id="MenuRoster" mnemonicParsing="false" text="Roster">
                                         <items>
                                             <MenuItem fx:id="PrintProfile" mnemonicParsing="false" onAction="#printByProfile" text="Print by Profile" />
-                                            <MenuItem fx:id="PrintSchoolandMajor" mnemonicParsing="false" onAction="#prin" text="Print by School and Major" />
+                                            <MenuItem fx:id="PrintSchoolandMajor" mnemonicParsing="false" onAction="#printbySchoolandMajor" text="Print by School and Major" />
                                             <MenuItem fx:id="PrintStanding" mnemonicParsing="false" text="Print by Standing" />
                                         </items>
                                     </Menu>
@@ -234,8 +234,8 @@
                        </rowConstraints>
                         <children>
                            <Label prefHeight="17.0" prefWidth="112.0" text="File Name" />
-                           <TextField prefHeight="26.0" prefWidth="396.0" GridPane.columnIndex="1" />
-                           <Button fx:id="RosterLoadFromFileButton" mnemonicParsing="false" text="Load From File" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <TextField fx:id="fileToLoad" prefHeight="26.0" prefWidth="396.0" GridPane.columnIndex="1" />
+                           <Button fx:id="LoadFromFileButton" mnemonicParsing="false" onAction="#loadFromFile" text="Load From File" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         </children>
                      </GridPane>
                   </children>
