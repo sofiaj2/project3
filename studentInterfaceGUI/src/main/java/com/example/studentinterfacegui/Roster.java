@@ -1,4 +1,6 @@
 package com.example.studentinterfacegui;
+import javafx.scene.control.TextArea;
+
 import java.util.Calendar;
 
 /**
@@ -232,9 +234,9 @@ public class Roster {
     /**
      * Print students in the roster, sorted by profile.
      */
-    public void print() {
-        System.out.println("** Student roster sorted by last name, first " +
-                "name, DOB **");
+    public void print(TextArea textArea) {
+        textArea.appendText("** Student roster sorted by last name, first " +
+                "name, DOB **\n");
         for (int i = 0; i < this.size - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < this.size; j++) {
@@ -253,12 +255,13 @@ public class Roster {
         for (int k = 0; k < this.size; k++) {
             Student student = this.roster[k];
             if (student != null)
-                System.out.println(student.getProfile().toString() + " " +
+
+                textArea.appendText(student.getProfile().toString() + " " +
                         student.getMajor().toString() + student.toString()
                         + getStanding(student).toString()
                         + student.getClassification());
         }
-        System.out.println("* end of roster *");
+        textArea.appendText("* end of roster *\n");
     }
 
     /**
