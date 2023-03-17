@@ -3,9 +3,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import java.text.DecimalFormat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import java.time.format.DateTimeFormatter;
@@ -30,23 +32,22 @@ public class TuitionManagerController {
             major = Major.MATH;
         } else {
             major = null;
-            textArea.appendText("Missing data\n");
-            return null;
+            //textArea.appendText("Missing data\n");
         }
         return major;
     }
 
     @FXML
     private void addRoster(ActionEvent event) {
-        Major major;
-        major = checkMajor(event);
-        if (isValidInputAdd(event) && major != null) {
+        Major major = checkMajor(event);
+        boolean allInputExists = isValidInputAdd(event);
+        if (allInputExists && major != null) {
             String firstName = rosterFirstName.getText();
             String lastName = rosterLastName.getText();
             int credits = Integer.parseInt(RosterCreditsCompleted.getText());
             String date = RosterDatePicker.getValue().toString();
             Date dob = new Date(date);
-            Profile profile = new Profile(firstName, lastName, dob);
+            Profile profile = new Profile(lastName, firstName, dob);
             Student student = null;
             if (RosterResidentButton.isSelected()) {
                 student = new Resident(profile, major, credits);
@@ -57,23 +58,25 @@ public class TuitionManagerController {
                     else if (RosterNYButton.isSelected())
                         student = new TriState(profile, major, credits, "NY");
                     else {
-                        textArea.appendText("Missing data\n");
-                    } //error message
+                        allInputExists = false;
+                    }
                 } else if (RosterInternationalButton.isSelected()) {
                     if (RosterStudyAbroadButton.isSelected())
                         student = new International(profile, major, credits, true);
                     else
                         student = new International(profile, major, credits, false);
                 } else {
-                    textArea.appendText("Missing data\n");
+                    allInputExists = false;
                 }
             } else {
-                textArea.appendText("Missing data\n");
+                allInputExists = false;
             }
-            if (student != null)
-                addStudentToRoster(student, rutgersRoster, firstName, lastName, date, dob);
+            if (student != null) {
+                addStudentToRoster(student, dob);
+            }
         }
-
+        if (!allInputExists || major == null)
+            textArea.appendText("Missing data\n");
     }
 
     private boolean isValidInputAdd(ActionEvent event) {
@@ -81,20 +84,22 @@ public class TuitionManagerController {
         String lastName = rosterLastName.getText();
         String creditsCompleted = RosterCreditsCompleted.getText();
         if (firstName.equals("") || lastName.equals("")) {
-            textArea.appendText("Missing data\n");
             return false;
         }
         if (!isValidCredits(creditsCompleted)) {
-            textArea.appendText("Missing data\n");
             return false;
         }
-        //String date = RosterDatePicker.getValue().toString();
 
         try {
             String date = RosterDatePicker.getValue().toString();
-        }//("yyyy-mm-dd"));
+        }
         catch (NullPointerException e) {
-            textArea.appendText("Missing data\n");
+            return false;
+        }
+        catch (DateTimeParseException exception) {
+            return false;
+        }
+        catch (Exception exception) {
             return false;
         }
 
@@ -105,7 +110,6 @@ public class TuitionManagerController {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
         if (firstName.equals("") || lastName.equals("")) {
-            textArea.appendText("Missing data\n");
             return false;
         }
 
@@ -113,23 +117,20 @@ public class TuitionManagerController {
             String date = RosterDatePicker.getValue().toString();
         }//("yyyy-mm-dd"));
         catch (NullPointerException e) {
-            textArea.appendText("Missing data\n");
             return false;
         }
         return true;
     }
 
-    private void addStudentToRoster(Student student, Roster rutgersRoster,
-                                    String firstName, String lastName,
-                                    String dateOfBirth, Date studentDate) {
+    private void addStudentToRoster(Student student, Date studentDate) {
         if (student != null) {
             if (rutgersRoster.contains(student)) {
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                textArea.appendText(student.getProfile().toString()
                         + " is already in the roster.\n");
             } else {
                 if (rutgersRoster.add(student)) {
-                    textArea.appendText(firstName + " " + lastName + " " +
-                            dateOfBirth + " added to the roster.\n");
+                    textArea.appendText(student.getProfile().toString() +
+                            " added to the roster.\n");
                 } else {
                     textArea.appendText("DOB invalid: " + studentDate +
                             " younger than 16 years old.\n");
@@ -142,19 +143,20 @@ public class TuitionManagerController {
     private void removeRoster(ActionEvent event) {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
-        String date = RosterDatePicker.getValue().toString();
-        Date dateOfBirth = new Date(date);
         if (isValidInputNamesandDate(event)) {
-            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            String date = RosterDatePicker.getValue().toString();
+            Date dateOfBirth = new Date(date);
+            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
             if (!rutgersRoster.contains(studentProfile)) {
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                textArea.appendText(studentProfile.toString()
                         + " is not in the roster.\n");
             } else {
                 rutgersRoster.remove(studentProfile);
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                textArea.appendText(studentProfile.toString()
                         + " removed from the roster.\n");
             }
         }
+        else {textArea.appendText("Missing data\n");}
     }
 
     @FXML
@@ -178,21 +180,22 @@ public class TuitionManagerController {
     private void changeMajor(ActionEvent event){
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
-        String date = RosterDatePicker.getValue().toString();
-        Date dateOfBirth = new Date(date);
         Major major = checkMajor(event);
         if (isValidInputNamesandDate(event) && major != null) {
-            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            String date = RosterDatePicker.getValue().toString();
+            Date dateOfBirth = new Date(date);
+            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
             if (!rutgersRoster.contains(studentProfile)) {
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth
+                textArea.appendText(studentProfile.toString()
                         + " is not in the roster.\n");
             } else {
                 rutgersRoster.findStudent(studentProfile).setMajor(major);
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
+                textArea.appendText(studentProfile.toString() +
                         " major changed to " +
                         printMajor(rutgersRoster.findStudent(studentProfile).getMajor()) + "\n");
             }
         }
+        else {textArea.appendText("Missing data\n");}
     }
 
     @FXML
@@ -286,16 +289,16 @@ public class TuitionManagerController {
     private void EnrollStudent(ActionEvent event){
         String firstName = EnrollFirstNameTextField.getText();
         String lastName = EnrollLastNameTextField.getText();
-        String date = EnrollDatePicker.getValue().toString();
-        Date dateOfBirth = new Date(date);
         if (isValidInputEnroll(event)){
-            int credits = Integer.parseInt(RosterCreditsCompleted.getText());
-            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            String date = EnrollDatePicker.getValue().toString();
+            Date dateOfBirth = new Date(date);
+            int credits = Integer.parseInt(EnrollCredits.getText());
+            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
             if (rutgersRoster.contains(studentProfile)){
                 EnrollStudent newStudent = new EnrollStudent(studentProfile, credits);
                 enrollRoster.add(newStudent);
                 textArea.appendText(studentProfile.toString() + " enrolled " + credits
-                        + "credits\n");
+                        + " credits\n");
             }
             else{textArea.appendText("Cannot Enroll: " + studentProfile.toString() +
                     " is not in the roster.\n");}
@@ -306,18 +309,19 @@ public class TuitionManagerController {
     private void dropStudent(ActionEvent event){
         String firstName = EnrollFirstNameTextField.getText();
         String lastName = EnrollLastNameTextField.getText();
-        String date = EnrollDatePicker.getValue().toString();
-        Date dateOfBirth = new Date(date);
         if (isValidInputEnrollNoCredit(event)){
-            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            String date = EnrollDatePicker.getValue().toString();
+            Date dateOfBirth = new Date(date);
+            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
             EnrollStudent newEnrolledStudent = new EnrollStudent(studentProfile);
             if (!enrollRoster.contains(newEnrolledStudent)){
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
+                textArea.appendText(studentProfile.toString() +
                         " is not enrolled.\n");
             }
-            else{enrollRoster.remove(newEnrolledStudent);
-                textArea.appendText(firstName + " " + lastName + " " + dateOfBirth +
-                        " dropped.\n");}
+            else {
+                enrollRoster.remove(newEnrolledStudent);
+                textArea.appendText(studentProfile.toString() + " dropped.\n");
+            }
         }
     }
 
@@ -336,15 +340,18 @@ public class TuitionManagerController {
     }
 
     @FXML
-    private boolean isValidInputScholarship (ActionEvent event) {
+    private boolean isValidInputScholarship(ActionEvent event) {
         String firstName = ScholarshipFirstNameTextField.getText();
         String lastName = ScholarshipLastNameTextField.getText();
-        int amount = Integer.parseInt(ScholarshipAmount.getText());
         if (firstName.equals("") || lastName.equals("")) {
             textArea.appendText("Missing data\n");
             return false;
         }
-        try {String date = ScholarshipDatePicker.getValue().toString();}//("yyyy-mm-dd"));
+        if (!isValidCredits(ScholarshipAmount.getText())) {
+            textArea.appendText("Missing data\n");
+            return false;
+        }
+        try {String date = ScholarshipDatePicker.getValue().toString();}
         catch (NullPointerException e) {
             textArea.appendText("Missing data\n");
             return false;
@@ -355,13 +362,13 @@ public class TuitionManagerController {
 
     @FXML
     private void scholarShipUpdateAmount(ActionEvent event){
-        if (isValidInputEnroll(event)){
+        if (isValidInputScholarship(event)){
             String firstName = ScholarshipFirstNameTextField.getText();
             String lastName = ScholarshipLastNameTextField.getText();
-            String date = RosterDatePicker.getValue().toString();
+            String date = ScholarshipDatePicker.getValue().toString();
             Date dateOfBirth = new Date(date);
-            int scholarshipAmount = Integer.parseInt(EnrollCredits.getText());
-            Profile studentProfile = new Profile(firstName, lastName, dateOfBirth);
+            int scholarshipMoney = Integer.parseInt(ScholarshipAmount.getText());
+            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
             Student studentToAward = rutgersRoster.findStudent(studentProfile);
             EnrollStudent studentEnrollFind =
                     enrollRoster.findStudent(studentProfile);
@@ -369,7 +376,7 @@ public class TuitionManagerController {
                 if (studentToAward.isResident()) { //check if resident
                     Resident residentToAward = (Resident) studentToAward;
                     if (residentToAward.isFullTime(studentEnrollFind.getCreditsEnrolled())) {
-                        residentToAward.setScholarship(scholarshipAmount);
+                        residentToAward.setScholarship(scholarshipMoney);
                         textArea.appendText(studentProfile +
                                 ": scholarship amount updated.\n");
                     } else { //not full time
@@ -382,6 +389,7 @@ public class TuitionManagerController {
                 }
             } else {textArea.appendText(studentProfile + " is not in the roster.\n");}
         }
+        textArea.appendText("can you see this\n");
     }
 
     @FXML
@@ -392,6 +400,77 @@ public class TuitionManagerController {
     @FXML
     private void printbySchoolandMajor(ActionEvent event){
         rutgersRoster.printBySchoolMajor(textArea);
+    }
+
+    @FXML
+    private void printbyStanding(ActionEvent event){
+        rutgersRoster.printByStanding(textArea);
+    }
+
+    @FXML
+    private void rbsPrint(ActionEvent event){
+        rutgersRoster.printBySchool(textArea, Major.BAIT.getSchool().toString());
+    }
+
+    @FXML
+    private void sasPrint(ActionEvent event){
+        rutgersRoster.printBySchool(textArea, Major.CS.getSchool().toString());
+    }
+
+    @FXML
+    private void soePrint(ActionEvent event){
+        rutgersRoster.printBySchool(textArea, Major.EE.getSchool().toString());
+    }
+
+    @FXML
+    private void sciPrint(ActionEvent event){
+        rutgersRoster.printBySchool(textArea, Major.ITI.getSchool().toString());
+    }
+
+    @FXML
+    private void eePrint(ActionEvent event){
+        rutgersRoster.printBySchool(textArea, Major.EE.getSchool().toString());
+    }
+
+    @FXML
+    private void printEnrolled(ActionEvent event){
+        enrollRoster.print(textArea);
+    }
+
+    @FXML
+    private void displayTuition(ActionEvent event){
+        if (rutgersRoster.isRosterEmpty()) {
+            textArea.appendText("Student roster is empty!\n");
+        }
+        else {
+            textArea.appendText("** Tuition due **\n");
+            EnrollStudent[] enrollList = enrollRoster.getEnrollStudents();
+            Student[] rosterList = rutgersRoster.getRoster();
+            for (int i = 0; i < enrollRoster.getSize(); i++){
+                EnrollStudent tempEnrollStudent = enrollList[i];
+                if (tempEnrollStudent != null) {
+                    DecimalFormat dfLarge = new DecimalFormat( "##,###.00" );
+                    DecimalFormat dfSmall = new DecimalFormat( "#,###.00");
+                    Student tempStudent = rutgersRoster.findStudent(tempEnrollStudent.getProfile());
+                    double tuition =
+                            tempStudent.tuitionDue(tempEnrollStudent.getCreditsEnrolled());
+                    String formattedTuition;
+                    if (tuition >= 10000) {
+                        formattedTuition = dfLarge.format(tuition);
+                    }
+                    else {
+                        formattedTuition = dfSmall.format(tuition);
+                    }
+                    textArea.appendText(tempStudent.getProfile().toString() +
+                            " " + tempStudent.invalidStudent() + "enrolled" +
+                            " " +
+                            tempEnrollStudent.getCreditsEnrolled() + " credits: " +
+                            "tuition " +
+                            "due: $" + formattedTuition + "\n");
+                }
+            }
+            textArea.appendText("* end of tuition due *\n");
+        }
     }
 
     @FXML
@@ -431,7 +510,7 @@ public class TuitionManagerController {
                     }
                 }
             }
-            textArea.appendText("Students loaded to the roster.");
+            textArea.appendText("Students loaded to the roster.\n");
         }
     }
 
@@ -486,6 +565,35 @@ public class TuitionManagerController {
             return null;
         }
         return studentMajor;
+    }
+
+    @FXML
+    private void semesterEnd(ActionEvent event) {
+        Student[] rosterList = rutgersRoster.getRoster();
+        EnrollStudent[] enrollList = enrollRoster.getEnrollStudents();
+        for (int i = 0; i < enrollRoster.getSize(); i++) {
+            EnrollStudent tempEnrollStudent = enrollList[i];
+            if (tempEnrollStudent != null) {
+                Student tempStudent =
+                        rutgersRoster.findStudent(tempEnrollStudent.getProfile());
+                tempStudent.updateCredits(enrollList[i].getCreditsEnrolled());
+            }
+        }
+        textArea.appendText("Credit completed has been updated.\n");
+        textArea.appendText("** list of students eligible for graduation **\n");
+
+        for (int i = 0; i < rutgersRoster.getSize(); i++) {
+            int creditsForGraduation = 120;
+            Student student = rosterList[i];
+            if (student != null) {
+                if (student.getCreditCompleted() >= creditsForGraduation) {
+                    System.out.println(student.getProfile().toString() + " " +
+                            student.getMajor().toString() + student.toString()
+                            + rutgersRoster.getStanding(student).toString() +
+                            student.getClassification());
+                }
+            }
+        }
     }
 
     @FXML
@@ -565,9 +673,6 @@ public class TuitionManagerController {
 
     @FXML
     private TextField EnrollLastNameTextField;
-
-    @FXML
-    private Button EnrollSemesterEnd;
 
     @FXML
     private Menu MenuEnroll;

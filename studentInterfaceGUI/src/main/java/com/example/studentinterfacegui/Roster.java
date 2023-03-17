@@ -14,7 +14,7 @@ public class Roster {
     public static final int NOT_FOUND = -1;
 
     /**
-     * Initiaslization of Roster object
+     * Initialization of Roster object
      */
     public Roster() {
         this.size = 4;
@@ -303,6 +303,26 @@ public class Roster {
         TextArea.appendText("* end of roster *\n");
     }
 
+    /**
+     * Prints the roster object by the selected school and then major if same
+     * school.
+     */
+    public void printBySchool(TextArea TextArea, String particularSchool) {
+        TextArea.appendText("** Student roster sorted by " + particularSchool + "\n");
+        for (int i = 0; i < this.size; i++)
+        {
+            if (this.roster[i] != null){
+                if (this.roster[i].getSchool().toString().compareTo(particularSchool) == 0){
+                    Student student = this.roster[i];
+                    TextArea.appendText(student.getProfile().toString() + " " +
+                            student.getMajor().toString() + student.toString()
+                            + getStanding(student).toString()
+                            + student.getClassification() + "\n");
+                }
+            }
+        }
+        TextArea.appendText("* end of roster *\n");
+    }
     /**
      * prints roster sorted by standing by using compareTo method
      */
