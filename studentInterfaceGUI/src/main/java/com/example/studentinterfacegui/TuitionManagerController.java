@@ -12,7 +12,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import java.time.format.DateTimeFormatter;
-
 public class TuitionManagerController {
 
     private Roster rutgersRoster = new Roster();

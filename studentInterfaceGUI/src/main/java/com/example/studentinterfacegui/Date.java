@@ -29,7 +29,6 @@ public class Date implements Comparable<Date> {
      * From string input, creates Date object using StringTokenizer
      * @param date String in format MONTH/DAY/YEAR
      */
-
     public Date(String date, boolean bool) { //take “mm/dd/yyyy” and create a Date object
         StringTokenizer token = new StringTokenizer(date, "/");
         month = Integer.parseInt(token.nextToken());
