@@ -165,7 +165,9 @@ public class TuitionManagerController {
         } else if (major.equals(major.EE)) {
             return "EE";
         }
-        else {return null;}
+        else {
+            return null;
+        }
     }
 
     private boolean isValidInputChangeMajor(ActionEvent event) {
@@ -491,6 +493,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints students sorted by their lexicographical class standing
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void printbyStanding(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -555,6 +561,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints all students in the Enrollment list in the order of the array
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void printEnrolled(ActionEvent event){
         if (enrollRoster.isEnrollmentEmpty()) {
@@ -603,6 +613,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Loads students to the roster from an external file
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void loadFromFile(ActionEvent event) {
         if (fileToLoad.equals(""))
@@ -679,6 +693,11 @@ public class TuitionManagerController {
             return null;
     }
 
+    /**
+     * Returns a Major object if given a major in the input String, null otherwise
+     * @param majorSubject a String input containing a major name
+     * @return a Major object
+     */
     private Major returnMajor(String majorSubject) {
         Major studentMajor;
         if (majorSubject.equalsIgnoreCase("CS")) {

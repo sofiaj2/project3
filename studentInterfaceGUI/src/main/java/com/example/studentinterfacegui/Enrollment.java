@@ -126,7 +126,7 @@ public class Enrollment {
         for (int i = 0; i < this.size; i++){
             if (this.enrollStudents[i] != null)
                 TextArea.appendText(this.enrollStudents[i].getProfile().toString()
-                        + ": " + "credits enrolled: "
+                        + ": " + "credits enrolled: \n"
                         + this.enrollStudents[i].getCreditsEnrolled());
         }
     } //print the array as is without sorting
