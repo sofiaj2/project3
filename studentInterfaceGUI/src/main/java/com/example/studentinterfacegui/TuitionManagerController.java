@@ -12,11 +12,21 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import java.time.format.DateTimeFormatter;
+/**
+ * TuitionManagerController handles the GUI interface and attaches listeners to
+ * buttons, textfields, etc. for user interaction.
+ */
 public class TuitionManagerController {
 
     private Roster rutgersRoster = new Roster();
     private Enrollment enrollRoster = new Enrollment();
 
+    /**
+     * checkMajor checks if one of the Major buttons is selected and
+     * returns a major object for the major button that is selected
+     * @param event the ActionEvent for when user interacts with specified object
+     * @return Major object
+     */
     private Major checkMajor(ActionEvent event) {
         Major major;
         if (RosterBAITButton.isSelected()) {
@@ -35,6 +45,10 @@ public class TuitionManagerController {
         return major;
     }
 
+    /**
+     * Adds a Student to the Roster with Profile attribute and major
+     * @param event ActionEvent for when user interacts with specified object
+     */
     @FXML
     private void addRoster(ActionEvent event) {
         if (isValidInputAdd(event)) {
@@ -74,6 +88,11 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Determines if a user has entered in valid input for the add method for Roster
+     * @param event ActionEvent for when the object interacts with specified object
+     * @return true if the input is valid, false if not.
+     */
     private boolean isValidInputAdd(ActionEvent event) {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
@@ -99,6 +118,11 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Determines if a user has entered in valid input without including credits
+     * @param event ActionEvent for when the object interacts with specified object
+     * @return true if the input is valid, false if not.
+     */
     private boolean isValidInputNamesandDate(ActionEvent event) {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
@@ -117,6 +141,11 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Add student to the Roster
+     * @param student Student object to be added
+     * @param studentDate attribute of Student
+     */
     private void addStudentToRoster(Student student, Date studentDate) {
         if (student != null) {
             if (rutgersRoster.contains(student)) {
@@ -134,6 +163,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Remove a student from the Roster.
+     * @param event ActionEvent that handles user interaction of specified object
+     */
     @FXML
     private void removeRoster(ActionEvent event) {
         String firstName = rosterFirstName.getText();
@@ -152,7 +185,11 @@ public class TuitionManagerController {
 
     }
 
-    @FXML
+    /**
+     * Takes in a Major object and prints the String of the Major
+     * @param major Object
+     * @return String of Major Object
+     */
     private String printMajor(Major major) {
         if (major.equals(major.BAIT)) {
             return "BAIT";
@@ -170,6 +207,11 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Checks if the inputted textfields and radiobutton are valid input
+     * @param event ActionEvent for handling objects user interacts with
+     * @return true if valid input, false if not
+     */
     private boolean isValidInputChangeMajor(ActionEvent event) {
         String firstName = rosterFirstName.getText();
         String lastName = rosterLastName.getText();
@@ -190,6 +232,10 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Changes the major of a specified Student in Roster
+     * @param event ActionEvent that handles specified user interaction of object
+     */
     @FXML
     private void changeMajor(ActionEvent event){
         String firstName = rosterFirstName.getText();
@@ -212,6 +258,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * If residentRadioButton selected, will disable other Non-Resident buttons
+     * @param event ActionEvent handler that reflects user specified object interaction
+     */
     @FXML
     private void residentSelected(ActionEvent event){
         if (RosterResidentButton.isSelected()) {
@@ -228,6 +278,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * If non-resident is selected, enables Non-Resident options like TriState
+     * @param event ActionEvent handler for User Interaction objects
+     */
     @FXML
     private void nonResidentSelected(ActionEvent event){
         if (RosterNonResidentButton.isSelected()){
@@ -239,6 +293,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * When TriState interacted with, disables Study Abroad and enables NY and CT
+     * @param event ActionEvent Handler for user interaction
+     */
     @FXML
     private void triStateSelected(ActionEvent event){
         if (RosterTriStateButton.isSelected()){
@@ -249,6 +307,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * When international selected, disables TriState options and enables Study Abroad
+     * @param event ActionEvent Handler for object user interaction
+     */
     @FXML
     private void internationalSelected(ActionEvent event){
         if (RosterInternationalButton.isSelected()){
@@ -260,6 +322,11 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Determines if the credits enrolled of a student are valid
+     * @param creditsEnrolled attribute of student
+     * @return true if credits enrolled are valid, false if not
+     */
     private boolean isValidCreditsEnrolled(String creditsEnrolled) {
         try {
             if (Integer.parseInt(creditsEnrolled) < 0) {
@@ -273,6 +340,11 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Determines if the student is eligible to enroll
+     * @param event ActionEvent Handler for user interaction for specified object
+     * @return true if input is valid, false if not
+     */
     private boolean isValidInputEnroll(ActionEvent event) {
         String firstName = EnrollFirstNameTextField.getText();
         String lastName = EnrollLastNameTextField.getText();
@@ -293,6 +365,11 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Determines if the input is valid for dropping a student
+     * @param event ActionEvent handler for obj
+     * @return true if the input is valid to drop
+     */
     private boolean isValidInputDrop(ActionEvent event) {
         String firstName = EnrollFirstNameTextField.getText();
         String lastName = EnrollLastNameTextField.getText();
@@ -309,6 +386,10 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Enrolls a student onto the Enrollment List
+     * @param event ActionEvent handler that handles user specified object
+     */
     @FXML
     private void EnrollStudent(ActionEvent event){
         String firstName = EnrollFirstNameTextField.getText();
@@ -335,10 +416,13 @@ public class TuitionManagerController {
                     textArea.appendText(studentToEnroll.getProfile().toString()
                             + " enrolled " + studentToEnroll.getCreditsEnrolled() + " credits\n"); }
             }
-
         }
     }
 
+    /**
+     * drops a Student from the enrollment List
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void dropStudent(ActionEvent event){
         String firstName = EnrollFirstNameTextField.getText();
@@ -359,6 +443,11 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Determines if the credits completed are valid
+     * @param creditsCompleted attribute of Student
+     * @return true if credits are valid, false if not
+     */
     private boolean isValidCredits(String creditsCompleted) {
         try {
             if (Integer.parseInt(creditsCompleted) < 0) {
@@ -372,6 +461,11 @@ public class TuitionManagerController {
         return true;
     }
 
+    /**
+     * Determines if a scholarship is able to be given to a Student
+     * @param event ActionEvent handler for user specified interaction object
+     * @return true if scholarship has valid input, false if not
+     */
     private boolean isValidInputScholarship(ActionEvent event) {
         String firstName = ScholarshipFirstNameTextField.getText();
         String lastName = ScholarshipLastNameTextField.getText();
@@ -387,14 +481,19 @@ public class TuitionManagerController {
             textArea.appendText("Missing data in line command.\n");
             return false;
         }
-
         return true;
     }
 
+    /**
+     * Determines if the scholarship amount is valid (in range 0 to 10000)
+     * @param scholarshipString string of scholarship from textField
+     * @return true if scholarshipAmount is valid, false if not
+     */
     private boolean isValidScholarshipAmount(String scholarshipString) {
         try {
             int maxScholarshipAmount = 10000;
-            if (Integer.parseInt(scholarshipString) <= 0 || Integer.parseInt(scholarshipString) > maxScholarshipAmount) {
+            if (Integer.parseInt(scholarshipString) <= 0 ||
+                    Integer.parseInt(scholarshipString) > maxScholarshipAmount) {
                 textArea.appendText(scholarshipString + ": invalid amount.\n");
                 return false;
             }
@@ -405,7 +504,10 @@ public class TuitionManagerController {
         return true;
     }
 
-
+    /**
+     * Updates the scholarship amount of a Student
+     * @param event ActionEvent handler of user specified object
+     */
     @FXML
     private void scholarShipUpdateAmount(ActionEvent event){
         if (isValidInputScholarship(event)) {
@@ -437,40 +539,12 @@ public class TuitionManagerController {
                 textArea.appendText(studentProfile + " is not in the roster.\n");
             }
         }
-
-
-        /*
-        if (isValidInputScholarship(event)){
-            String firstName = ScholarshipFirstNameTextField.getText();
-            String lastName = ScholarshipLastNameTextField.getText();
-            String date = ScholarshipDatePicker.getValue().toString();
-            Date dateOfBirth = new Date(date);
-            int scholarshipMoney = Integer.parseInt(ScholarshipAmount.getText());
-            Profile studentProfile = new Profile(lastName, firstName, dateOfBirth);
-            Student studentToAward = rutgersRoster.findStudent(studentProfile);
-            EnrollStudent studentEnrollFind =
-                    enrollRoster.findStudent(studentProfile);
-            if (rutgersRoster.contains(studentProfile)){
-                if (studentToAward.isResident()) { //check if resident
-                    Resident residentToAward = (Resident) studentToAward;
-                    if (residentToAward.isFullTime(studentEnrollFind.getCreditsEnrolled())) {
-                        residentToAward.setScholarship(scholarshipMoney);
-                        textArea.appendText(studentProfile +
-                                ": scholarship amount updated.\n");
-                    } else { //not full time
-                        textArea.appendText(" part time student is not " +
-                                "eligible for the scholarship.\n");
-                    }
-                } else { //not resident
-                    textArea.appendText(studentProfile + " " + studentToAward.invalidStudent() +
-                            "is not eligible for the scholarship.\n");
-                }
-            } else {textArea.appendText(studentProfile + " is not in the roster.\n");}
-        }
-         */
-
     }
 
+    /**
+     * Prints students sorted by their Profile
+     * @param event ActionEvent handler of user interaction object
+     */
     @FXML
     private void printByProfile(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -482,6 +556,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints students sorted by School and Major
+     * @param event ActionEvent handler of user interaction object
+     */
     @FXML
     private void printbySchoolandMajor(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -490,7 +568,6 @@ public class TuitionManagerController {
         else {
             rutgersRoster.printBySchoolMajor(textArea);
         }
-
     }
 
     /**
@@ -507,6 +584,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Prints all students in RBS
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void rbsPrint(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -517,6 +598,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Prints all students in SAS
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void sasPrint(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -528,6 +613,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints all students in SOE
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void soePrint(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -539,6 +628,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints all students in SC&I school
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void sciPrint(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -550,6 +643,10 @@ public class TuitionManagerController {
 
     }
 
+    /**
+     * Prints all students with EE Major
+     * @param event ActionEvent handler for user interaction specified objects
+     */
     @FXML
     private void eePrint(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -558,7 +655,6 @@ public class TuitionManagerController {
         else {
             rutgersRoster.printBySchool(textArea, Major.EE.getSchool().toString());
         }
-
     }
 
     /**
@@ -577,6 +673,10 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Display the tuition dues for students in the Enrollment List
+     * @param event ActionEvent handler for user interaction specified object
+     */
     @FXML
     private void displayTuition(ActionEvent event){
         if (rutgersRoster.isRosterEmpty()) {
@@ -658,6 +758,15 @@ public class TuitionManagerController {
         }
     }
 
+    /**
+     * Create a student type for Student dependent on Status RadioButton
+     * @param dataToken dataToken read in from input file
+     * @param studentProfile Profile object read in from input file
+     * @param studentMajor Major attribute read in from input file
+     * @param credits attribute for Student
+     * @param inputs array for Student type creation
+     * @return Student object of specified type
+     */
     private Student createStudentType(String dataToken, Profile studentProfile,
                                       Major studentMajor, int credits, String[] inputs) {
         if (dataToken.equals("AR") || dataToken.equals("R")) {
@@ -716,6 +825,11 @@ public class TuitionManagerController {
         return studentMajor;
     }
 
+    /**
+     * Ends the semester for students and adds CreditsEnrolled to CreditsCompleted
+     * and prints out Students available for graduation
+     * @param event ActionEvent Handler for specified user interaction object
+     */
     @FXML
     private void semesterEnd(ActionEvent event) {
         Student[] rosterList = rutgersRoster.getRoster();
