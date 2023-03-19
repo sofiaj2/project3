@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * TuitionManagerController handles the GUI interface and attaches listeners to
  * buttons, textfields, etc. for user interaction.
+ * @authors Arnold Nguyen, Sofia Juliani
  */
 public class TuitionManagerController {
 

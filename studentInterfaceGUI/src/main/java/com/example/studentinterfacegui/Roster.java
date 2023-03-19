@@ -180,6 +180,13 @@ public class Roster {
         return false;
     }
 
+    /**
+     * Removes a student from the Roster by using their profile to find them
+     * in the Roster list
+     * @param profile Profile object of the student to be removed
+     * @return true if the student is in Roster, false if the student is not
+     * in Roster
+     */
     public boolean remove(Profile profile) { //maintain the order after remove
         boolean studentExists = false;
         // instantiate the variable that will contain the index of the
@@ -205,9 +212,9 @@ public class Roster {
     }
 
     /**
-     * Checks if student is in the roster class
-     * @param student object to be found in roster
-     * @return true if student is found in the roster, false otherwise.
+     * Checks if student is in the Roster class
+     * @param student object to be found in Roster
+     * @return true if student is found in the Roster, false otherwise.
      */
     public boolean contains(Student student) {
         for (int i = 0; i < this.size; i++) {
@@ -220,6 +227,11 @@ public class Roster {
         return false;
     }
 
+    /**
+     * Checks if student is in the Roster class
+     * @param profile Profile object to be found in Roster
+     * @return true if student is found in the Roster, false otherwise.
+     */
     public boolean contains(Profile profile) {
         for (int i = 0; i < this.size; i++) {
             if (this.roster[i] != null) {
@@ -233,6 +245,7 @@ public class Roster {
 
     /**
      * Print students in the roster, sorted by profile.
+     * @param textArea to print to in GUI
      */
     public void print(TextArea textArea) {
         textArea.appendText("** Student roster sorted by last name, first " +
@@ -267,6 +280,7 @@ public class Roster {
     /**
      * Prints the roster object by sorting by school and then major if same
      * school. Uses compareTo to sort as part of selection sort.
+     *  @param textArea to print to in GUI
      */
     public void printBySchoolMajor(TextArea TextArea) { //print roster sorted by school, major
         TextArea.appendText("** Student roster sorted by school, major **\n");
@@ -306,28 +320,31 @@ public class Roster {
     /**
      * Prints the roster object by the selected school and then major if same
      * school.
+     *  @param textArea to print to in GUI
+     *  @param particularSchool String name of school
      */
-    public void printBySchool(TextArea TextArea, String particularSchool) {
-        TextArea.appendText("** Student roster sorted by " + particularSchool + "\n");
+    public void printBySchool(TextArea textArea, String particularSchool) {
+        textArea.appendText("** Student roster sorted by " + particularSchool + "\n");
         for (int i = 0; i < this.size; i++)
         {
             if (this.roster[i] != null){
                 if (this.roster[i].getSchool().toString().compareTo(particularSchool) == 0){
                     Student student = this.roster[i];
-                    TextArea.appendText(student.getProfile().toString() + " " +
+                    textArea.appendText(student.getProfile().toString() + " " +
                             student.getMajor().toString() + student.toString()
                             + getStanding(student).toString()
                             + student.getClassification() + "\n");
                 }
             }
         }
-        TextArea.appendText("* end of roster *\n");
+        textArea.appendText("* end of roster *\n");
     }
     /**
      * prints roster sorted by standing by using compareTo method
+     * @param textArea to print to in GUI
      */
-    public void printByStanding(TextArea TextArea) { //print roster sorted by standing
-        TextArea.appendText("** Student roster sorted by standing **\n");
+    public void printByStanding(TextArea textArea) { //print roster sorted by standing
+        textArea.appendText("** Student roster sorted by standing **\n");
         for (int i = 0; i < this.size - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < this.size; j++) {
@@ -348,12 +365,12 @@ public class Roster {
         for (int k = 0; k < this.size; k++) {
             Student student = this.roster[k];
             if (student != null)
-                TextArea.appendText(student.getProfile().toString() + " " +
+                textArea.appendText(student.getProfile().toString() + " " +
                         student.getMajor().toString() + student.toString()
                         + getStanding(student).toString()
                         + student.getClassification() + "\n");
         }
-        TextArea.appendText("* end of roster *\n");
+        textArea.appendText("* end of roster *\n");
     }
 
     /**
@@ -387,7 +404,7 @@ public class Roster {
     }
 
     /**
-     * gets roster array of students
+     * Gets roster array of students
      * @return roster array carrying student objects
      */
     public Student[] getRoster() {

@@ -173,6 +173,12 @@ public class Enrollment {
         return true;
     }
 
+    /**
+     * Finds a student by using their profile and returns an EnrollStudent,
+     * returns null if not found
+     * @param profile Profile object of the student to be found
+     * @return the EnrollStudent with the matching profile in the parameter
+     */
     public EnrollStudent findStudent(Profile profile) {
         for (int i = 0; i < this.size; i++)
             if (this.enrollStudents[i] != null) {

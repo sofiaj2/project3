@@ -9,7 +9,18 @@ import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 
+/**
+ * TuitionManagerApplication is the class that launches the GUI for managing
+ * the tuition of a particular university
+ * @authors Arnold Nguyen, Sofia Juliani
+ */
 public class TuitionManagerApplication extends Application {
+
+    /**
+     * Creates a new Scene, the root of the GUI, and loads the FXML file
+     * @param stage object necessary for launching the GUI
+     * @throws IOException if the .fxml file does not exist
+     */
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -20,6 +31,10 @@ public class TuitionManagerApplication extends Application {
         stage.show();
     }
 
+    /**
+     * Utilizes the launch() method to initiate the GUI for user interaction
+     * @param args optional input, not needed to launch the GUI
+     */
     public static void main(String[] args) {
         launch();
     }
